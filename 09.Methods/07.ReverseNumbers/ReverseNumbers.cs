@@ -7,29 +7,47 @@ class ReverseNumbers
     {
         string digitCount = number.ToString();
         string digitsAfterSeparator = "";
+        
+        //check if the number has a floating point
         if (number != (int)number)
         {
+            //save the digits after the floating point in a new string
             digitsAfterSeparator = digitCount.Substring(digitCount.IndexOf('.') + 1);
+            
+            //remove the floating point and the digits after it
             digitCount = digitCount.Remove(digitCount.IndexOf('.'));
         }
         string numberWithoutSeparator = digitCount + digitsAfterSeparator;
         int numberAsInt = int.Parse(numberWithoutSeparator);
+        
+        //check if the number is negative, if so make it positive
+        if (numberAsInt < 0)
+        {
+            numberAsInt *= -1;
+        }
         StringBuilder sb = new StringBuilder();
         int remainder = 0;
+        
+        //reverse the number and save it in a StringBuilder
         for (int i = 0; i < numberWithoutSeparator.Length; i++)
         {
             remainder = numberAsInt % 10;
             numberAsInt /= 10;
-            if (remainder > 9)
-            {
-                ReverseNumberOrder(number);
-
-            }
             sb.Append(remainder);
         }
+
         decimal reversedIntNumber = int.Parse(sb.ToString());
+
+        //determine the position of the floating point
         decimal divider = (decimal)Math.Pow(10, digitCount.Length);
         decimal reversedNumber = reversedIntNumber / divider;
+        
+        //if the input number was negative, it was converted into a positive one, so we 
+        //should make it a negative number again
+        if (number < 0)
+        {
+            reversedNumber = -reversedNumber;
+        }
         return reversedNumber;
     }
 
