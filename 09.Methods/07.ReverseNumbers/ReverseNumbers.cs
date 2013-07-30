@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
 
-class ReverseNumbers
+public class ReverseNumbers
 {
-    static decimal ReverseNumberOrder(decimal number)
+    public static decimal ReverseNumberOrder(decimal number)
     {
         string digitCount = number.ToString();
         string digitsAfterSeparator = "";
@@ -37,10 +37,15 @@ class ReverseNumbers
         }
 
         decimal reversedIntNumber = int.Parse(sb.ToString());
+        decimal reversedNumber;
 
         //determine the position of the floating point
-        decimal divider = (decimal)Math.Pow(10, digitCount.Length);
-        decimal reversedNumber = reversedIntNumber / divider;
+        if (number != (int)number)
+        {
+            decimal divider = (decimal)Math.Pow(10, digitCount.Length);
+            reversedNumber = reversedIntNumber / divider;
+        }
+        reversedNumber = (decimal)reversedIntNumber;
         
         //if the input number was negative, it was converted into a positive one, so we 
         //should make it a negative number again
