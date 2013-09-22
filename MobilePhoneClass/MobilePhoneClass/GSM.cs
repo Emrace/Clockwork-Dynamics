@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 //Define a class that holds information about a mobile phone device: model, manufacturer, price, owner
@@ -12,15 +13,17 @@ public class GSM
     private string manufacturer;
     private uint? price;
     private string owner;
-    
-    static private GSM iPhone = new GSM("4S", "Apple", 439);
+
+    static private GSM iPhone = new GSM("4S", "Apple", 439, "Mel");
 
     //constructors
-    public GSM(string model, string manufacturer) : this(model, manufacturer, null, null, null, null)
+    public GSM(string model, string manufacturer)
+        : this(model, manufacturer, null, null, null, null)
     {
     }
 
-    public GSM(string model, string manufacturer, uint? price) : this(model, manufacturer, price, null, null, null)
+    public GSM(string model, string manufacturer, uint? price, string owner)
+        : this(model, manufacturer, price, owner, null, null)
     {
     }
 
@@ -35,6 +38,8 @@ public class GSM
     }
 
     //properties
+    private List<Call> callHistory = new List<Call>();
+
     public static GSM Iphone
     {
         get
@@ -81,6 +86,18 @@ public class GSM
         }
     }
 
+    public uint? Price
+    {
+        get
+        {
+            return this.price;
+        }
+        set
+        {
+            this.price = value;
+        }
+    }
+
     public string Owner
     {
         get
@@ -101,12 +118,63 @@ public class GSM
     }
 
     //methods
+    public void AddCall(DateTime now, string number, int duration)
+    {
+        Call myCall = new Call(now, number, duration);
+        callHistory.Add(myCall);
+    }
+    
+    public void RemoveCallByDuration(int duration)
+    {
+        for (int i = 0; i < callHistory.Count; i++)
+        {
+            if (callHistory[i].Duration == duration)
+            {
+                callHistory.RemoveAt(i);
+                i--;
+            }
+        }
+    }
+
+    public void ClearHistory()
+    {
+        callHistory.Clear();
+    }
+
+    public void DisplayCallHistory()
+    {
+        StringBuilder callList = new StringBuilder();
+        callList.AppendLine("Call History:");
+        Console.WriteLine(new string('-', 35));
+        foreach (var call in callHistory)
+        {
+            callList.AppendFormat("Number: {0}, \n Date: {1}, \n Duration: {2} seconds \n", 
+                call.PhoneNumber, call.DateAndTime, call.Duration);
+        }
+
+        Console.WriteLine(new string('-', 35));
+
+        Console.WriteLine(callList.ToString());
+    }
+
+    public double CalcPrice(double perMin)
+    {
+        double completeTimeTalked = 0;
+        for (int i = 0; i < callHistory.Count; i++)
+        {
+            completeTimeTalked += callHistory[i].Duration;
+        }
+
+        double price = perMin * (Math.Ceiling(completeTimeTalked / 60));
+        return price;
+    }
+
     public override string ToString()
     {
         StringBuilder phoneInfo = new StringBuilder();
-        phoneInfo.Append(new string('-', 5));
+        phoneInfo.Append(new string('-', 7));
         phoneInfo.Append("GSM");
-        phoneInfo.AppendLine(new string('-', 5));
+        phoneInfo.AppendLine(new string('-', 7));
         phoneInfo.AppendLine(this.model);
         phoneInfo.AppendLine(this.manufacturer);
         phoneInfo.AppendLine(this.price.ToString());
