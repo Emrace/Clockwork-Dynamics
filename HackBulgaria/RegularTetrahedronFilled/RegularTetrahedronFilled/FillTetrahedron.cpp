@@ -14,45 +14,46 @@ float fill_tetrahedron(int num)
 
 int tetrahedrons_filled(vector<int>& tetrahedrons, int water)
 {
-	double current_water = water;
+	float current_water = water;
 	int count = tetrahedrons.size();
-	vector<int> volumes(count);
+	float curr_vol;
 	bool can_fill = true;
-	int min = 0;
+	int min = tetrahedrons[0];
 	int filled = 0;
 	int min_pos = 0;
 
+
 	for (int i = 0; i < count; i++)
 	{
-		volumes[i] = fill_tetrahedron(tetrahedrons[i]);
-	}
-
-	min = volumes[0];
-	while (can_fill)
-	{
-
-		for (int i = 0; i < count; i++)
+		for (int j = 0; j < count; j++)
 		{
-			if (volumes[i] < min)
+			if (tetrahedrons[j] <= min && tetrahedrons[j] != 0)
 			{
-				min = volumes[i];
-				min_pos = i;
-			}
+				min = tetrahedrons[j];
+				min_pos = j;
+			}			
 		}
-
-		if (current_water < min)
+		curr_vol = fill_tetrahedron(min);
+		if (current_water < curr_vol)
 		{
-			can_fill = false;
+			return filled;
 		}
 		else
-		{			
-			current_water -= min;
+		{
+			current_water -= curr_vol;
 			filled++;
 		}
-
-		volumes.erase(volumes.begin() + min_pos - 1);
-		min = volumes[0];
+		tetrahedrons[min_pos] = 0;
+		if (tetrahedrons[0] == 0)
+		{
+			min = tetrahedrons[1];
+		}
+		else
+		{
+			min = tetrahedrons[0];
+		}
 	}
+	
 	return filled;
 }
 
@@ -69,14 +70,6 @@ int main()
 	tetrahedrons[0] = 100;
 	tetrahedrons[1] = 20;
 	tetrahedrons[2] = 30;
-	/*cin >> size;
-	cin >> water;
-
-	for (int i = 0; i < size; i++)
-	{
-		cin >> tetrahedrons[i];
-	}
-	*/
 
 	int filled = tetrahedrons_filled(tetrahedrons, 10);
 
