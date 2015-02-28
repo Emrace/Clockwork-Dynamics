@@ -17,4 +17,4 @@ def tetrahedrons_filled(tetrahedrons, water):
 		else:
 			return filled
 
-print tetrahedrons_filled([100, 20, 30], 10)
+print tetrahedrons_filled([100, 20, 30, 78, 49], 100)
